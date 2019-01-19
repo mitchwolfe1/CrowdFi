@@ -16,7 +16,7 @@ public class SignalTest {
 
   public double getDistance(double signalStrengthMHz, double frequency)
   {
-    return Math.pow(10.0, 	double exp = (27.55 - (20 * Math.log10(frequency)) + Math.abs(strength)) / 20.0);
+    return Math.pow(10.0,(27.55 - (20 * Math.log10(frequency)) + Math.abs(strength)) / 20.0);
   }
 
 }
