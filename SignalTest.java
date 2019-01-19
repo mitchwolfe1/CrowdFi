@@ -9,8 +9,10 @@ public class SignalTest {
 
     s = new Scanner(System.in);
     System.out.println("Enter signal strength (MHz): ");
+		strength = s.nextDouble();
 		frequency = 2400;
     System.out.println(getDistance(strength, frequency));
+
 
 
 
