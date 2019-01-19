@@ -1,9 +1,14 @@
 import subprocess
 import sys
 import netifaces
+from websocket import create_connection
+import json
 
 scan_iface = sys.argv[1]
 mac_iface = sys.argv[2]
+
+ws = create_connection("ws://localhost:6969")
+
 
 process = subprocess.Popen(["sh", "lol.sh", scan_iface], stdout=subprocess.PIPE)
 for line in iter(process.stdout.readline, b''):
@@ -15,7 +20,12 @@ for line in iter(process.stdout.readline, b''):
 		mac_addy = line_arr[2]
 		ssid = line_arr[3].replace("\"", "")
 		rpi_mac = netifaces.ifaddresses(mac_iface)[netifaces.AF_LINK][0]["addr"]
-	
+		
+		json_obj = {"ts":ts, "signal_strength":str(signal_strength), "mac_address":mac_addy, "rpi_mac": rpi_mac}
+		json_obj = json.dumps(json_obj)
+		ws.send(json_obj)
+		print(ts + " " + str(signal_strength) + " " + mac_addy + " " + ssid + " " + rpi_mac)
+
 
 	except Exception as e:
 		ts = ""
@@ -26,4 +36,3 @@ for line in iter(process.stdout.readline, b''):
 
 		print(str(e))
 
-	print(ts + " " + str(signal_strength) + " " + mac_addy + " " + ssid + " " + rpi_mac)
