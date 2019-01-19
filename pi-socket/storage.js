@@ -1,11 +1,13 @@
+
+
 const redis = require('redis'),
 	client = redis.createClient();
 
 class Storage {
 	constructor() {}
 
-	storeDeviceData(rpiId, devMAC, strength, timestamp) {
-		client.hmset(devMAC, rpiId, strength, "timestamp", timestamp);
+	storeDeviceData(rpiId, devMAC, distance, timestamp) {
+		client.hmset(devMAC, rpiId, distance, "timestamp", timestamp);
 	}
 	storeRPiPosition(rpiId, lat, long) {
 		client.hmset(rpiId, "lat", lat, "long", long);
@@ -27,6 +29,6 @@ class Storage {
 		});
 	}
 }
-
-var storage = new Storage();
-console.log(storage.deviceIsTriangulatable("TE:ST:MA:C_"));
+module.export = Storage;
+//var storage = new Storage();
+//console.log(storage.deviceIsTriangulatable("TE:ST:MA:C_"));

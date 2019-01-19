@@ -1,4 +1,6 @@
 const WebSocketServer = require('ws').Server;
+const StorageRedis = require('./storage.js');
+var storage = new StorageRedis()
 
 class ServerSocket {
 
@@ -43,7 +45,7 @@ class ServerSocket {
 				var json_obj = JSON.parse(message);
 				var distance = cls.distanceForSignalStrength(parseInt(json_obj['signal_strength']));
 				json_obj["distance"] = distance;
-
+				storage.storeDeviceData(json_obj["rpi_mac"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
 				console.log(json_obj);
 			});
 
