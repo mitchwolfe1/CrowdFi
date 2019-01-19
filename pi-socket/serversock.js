@@ -1,6 +1,6 @@
 const WebSocketServer = require('ws').Server;
-const StorageRedis = require('./storage.js').Storage;
-var storage = new StorageRedis()
+const Storage = require('./storage.js');
+var storage = new Storage()
 
 class ServerSocket {
 
