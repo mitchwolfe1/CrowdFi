@@ -6,8 +6,9 @@ import json
 
 scan_iface = sys.argv[1]
 mac_iface = sys.argv[2]
+server = sys.argv[3]
 
-ws = create_connection("ws://localhost:6969")
+ws = create_connection("ws://" + server + ":6969")
 
 
 process = subprocess.Popen(["sh", "lol.sh", scan_iface], stdout=subprocess.PIPE)
