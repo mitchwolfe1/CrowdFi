@@ -11,7 +11,22 @@ class Storage {
 		client.hmset(rpiId, "lat", lat, "long", long);
 	}
 	deviceIsTriangulatable(device) {
-		let sum = 0;
-		if (client.hmget(device, "1"));
+		let promise = new Promise(function(resolve, reject) {
+			let sum = 0;
+			client.hmget(device, "1", "2", "3", "4", "5", function(err, res) {
+				for (let i = 0; i < res.length; i++) {
+					if (res[i] != '') sum++;
+				}
+			});
+			resolve(sum > 2);
+		});
+
+		promise.then(function(value) {
+			console.log("Success: " + value);
+			return 1;
+		});
 	}
 }
+
+var storage = new Storage();
+console.log(storage.deviceIsTriangulatable("TE:ST:MA:C_"));
