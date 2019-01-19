@@ -31,3 +31,4 @@ class MapsSocket {
 		});
 	}
 }
+module.exports = MapsSocket;
