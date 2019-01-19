@@ -25,8 +25,6 @@ class Point {
 		return new Point(p1.x * mul, p1.y * mul, p1.z * mul);
 	}
 
-
-
 	distance(aPoint) {
 		return Point.distance(this, aPoint);
 	}
