@@ -7,6 +7,22 @@ class ServerSocket {
 		this.connections = [];
 	}
 
+
+	distanceForSignalStrength(signalLevel) {
+		let k = -27.55;
+		let Ptx = 19.5;
+		let CLtx = 0.0;
+		let CLrx = 0.0;
+		let AGtx = 2.0;
+		let AGrx = 0.0;
+		let Prx = signalLevel;
+		let FM = 14.0;
+		let f = 2412.0;
+		let fspl = Ptx - CLtx + AGtx + AGrx - CLrx - Prx - FM;
+		let distance = Math.pow(10, ((fspl - k - 20.0 * Math.log10(f)) / 20.0) );
+		return distance;
+	}
+
 	startWebSocket() {
 		var cls = this;
 		var wss = new WebSocketServer({port: this.port});
@@ -24,9 +40,13 @@ class ServerSocket {
 			});
 
 			ws.on('message', function(message) {
-				console.log(message);
+				var json_obj = JSON.parse(message);
+				var distance = cls.distanceForSignalStrength(parseInt(json_obj['signal_strength']));
+				json_obj["distance"] = distance;
 
+				console.log(json_obj);
 			});
+
 			console.log("New connection from " + ws._socket.remoteAddress);
 
 		});

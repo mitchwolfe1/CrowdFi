@@ -21,18 +21,13 @@ for line in iter(process.stdout.readline, b''):
 		ssid = line_arr[3].replace("\"", "")
 		rpi_mac = netifaces.ifaddresses(mac_iface)[netifaces.AF_LINK][0]["addr"]
 		
-		json_obj = {"ts":ts, "signal_strength":str(signal_strength), "mac_address":mac_addy, "rpi_mac": rpi_mac}
+		json_obj = {"ts":ts, "signal_strength":str(signal_strength), "mac_address":mac_addy, "rpi_mac": rpi_mac, "ssid":ssid}
 		json_obj = json.dumps(json_obj)
 		ws.send(json_obj)
 		print(ts + " " + str(signal_strength) + " " + mac_addy + " " + ssid + " " + rpi_mac)
 
 
 	except Exception as e:
-		ts = ""
-		signal_strength = ""
-		mac_addy = ""
-		ssid = ""
-		rpi_mac = ""
 
 		print(str(e))
 
