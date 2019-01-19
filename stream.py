@@ -15,6 +15,8 @@ for line in iter(process.stdout.readline, b''):
 		mac_addy = line_arr[2]
 		ssid = line_arr[3].replace("\"", "")
 		rpi_mac = netifaces.ifaddresses(mac_iface)[netifaces.AF_LINK][0]["addr"]
+	
+
 	except Exception as e:
 		ts = ""
 		signal_strength = ""
