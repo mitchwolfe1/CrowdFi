@@ -29,6 +29,6 @@ class Storage {
 		});
 	}
 }
-module.export = Storage;
+module.exports = Storage;
 //var storage = new Storage();
 //console.log(storage.deviceIsTriangulatable("TE:ST:MA:C_"));
