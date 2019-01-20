@@ -61,7 +61,7 @@ class ServerSocket {
 				(async () => {
   					try {
     					let rpiPos = await Storage.getRPiPosition(json_obj["rpi"]);
-    					console.log("RPIPOS: " + rpiPos);
+    					console.log("RPIPOS: " + rpiPos.lat + "," + rpiPos.long);
     					let deviceLocation = ServerSocket.latLongAndDistanceToLatLong(rpiPos, json_obj["distance"]);
 						data.push(deviceLocation);
 						queued++;
