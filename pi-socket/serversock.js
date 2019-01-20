@@ -96,7 +96,7 @@ let distance = 6.5;
 
 let rpi = {lat: rpiLat, long: rpiLong};
 
-for (int i = 0; i < 10; i++) {
+for (let i = 0; i < 10; i++) {
 	let device = ServerSocket.latLongAndDistanceToLatLong(rpi, distance);
 	console.log(device.lat + "," + device.long);
 }
