@@ -21,7 +21,7 @@ class Storage {
 					reject(error);
 				} else {
 					console.log(response);
-					resolve({lat: response[1], long: response[3]});
+					resolve(response);
 				}
 			});
 		});
