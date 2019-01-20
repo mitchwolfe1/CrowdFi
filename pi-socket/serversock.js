@@ -5,8 +5,8 @@ const Storage = require('./storage.js');
 const MapsSocket = require('./mapssocket.js');
 var storage = new Storage();
 
-let probe_reqs = 0;
-let data = {};
+let queued = 0;
+let data = [];
 
 class ServerSocket {
 
@@ -60,9 +60,15 @@ class ServerSocket {
     				const rpiPos = await Storage.getRPiPosition(json_obj["rpi_id"]);
   					} catch(e) {}
 				})()
-
-				// data[json_obj["mac_address"]] = [Storage.getRPiPositionjson_obj["rpi_id"]]
-				mapsocket.sendMessage(); //[lat, lon, weight]
+				let deviceLocation = ServerSocket.latLongAndDistanceToLatLong(rpiPos, json_obj["distance"]);
+				data.push(deviceLocation);
+				queued++;
+				if (queued > 100) {
+					mapsocket.sendMessage(data.slice(0));
+					data = []
+					queued = 0;
+				}
+				// mapsocket.sendMessage(); //[lat, lon, weight]
 				console.log(json_obj);
 			});
 
@@ -74,23 +80,11 @@ class ServerSocket {
 	static latLongAndDistanceToLatLong(ll, d) {
 		let rpiLat = ll.lat;
 		let rpiLong = ll.long;
-		console.log("RPI: " + ll.lat + ", " + ll.long);
-		//new_latitude  = latitude  + (dy / r_earth) * (180 / pi);
-		//new_longitude = longitude + (dx / r_earth) * (180 / pi) / cos(latitude * pi/180);
 		let deviceAngle = Math.floor(Math.random() * 360);
-		console.log("Device angle: " + deviceAngle);
 		let deltaLong = Math.cos(deviceAngle) * (d / 1000.0);
 		let deltaLat = Math.sin(deviceAngle) * (d / 1000.0);
-		console.log("dLat: " + deltaLat + ", dLong: " + deltaLong);
-
 		let deviceLat = rpiLat + (deltaLat / 6378.0) * (180.0 / 3.1415);
-		console.log("Device Lat: " + deviceLat);
-		console.log("rpiLat: " + rpiLat);
-		console.log("(deltaLat / 6378.0): " + (deltaLat / 6378.0));
-		console.log("(180.0 / Math.pi): " + (180.0 / Math.pi));
-
 		let deviceLong = rpiLong + (deltaLong / 6378.0) * (180.0 / 3.1415) / Math.cos(rpiLat * (3.1415 / 180.0));
-		// console.log("DeviceLat: " + deviceLat + ", DeviceLong: " + deviceLong);
 		return {lat: deviceLat, long: deviceLong};
 	}
 }
