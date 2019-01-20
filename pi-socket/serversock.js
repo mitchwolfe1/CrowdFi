@@ -68,7 +68,7 @@ class ServerSocket {
 		});
 	}
 
-	static latLongAndDistanceToLatLong(ll, d) {
+	async static latLongAndDistanceToLatLong(ll, d) {
 		let rpiLat = ll.lat;
 		let rpiLong = ll.long;
 		//new_latitude  = latitude  + (dy / r_earth) * (180 / pi);
