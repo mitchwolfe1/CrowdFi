@@ -81,7 +81,7 @@ class ServerSocket {
 		let deltaLat = Math.sin(deviceAngle) * d;
 
 		let deviceLat = rpiLat + (deltaLat / 6378) * (180 / Math.pi);
-		let deviceLong = rpiLong + (deltaLong / 6378) * (180 / Math.pi) / cos(rpiLat * (Math.pi / 180));
+		let deviceLong = rpiLong + (deltaLong / 6378) * (180 / Math.pi) / Math.cos(rpiLat * (Math.pi / 180));
 
 		return {lat: deviceLat, long: deviceLong};
 	}
