@@ -78,7 +78,7 @@ class ServerSocket {
     				let deviceLocation = ServerSocket.latLongAndDistanceToLatLong(rpiPos, json_obj["distance"]);
 					data.push(deviceLocation);
 					queued++;
-					if (queued > 100) {
+					if (queued > 10) {
 						mapsock.sendMessage(JSON.stringify(data));
 						data = []
 						queued = 0;

@@ -9,5 +9,5 @@ ws.onclose = function(){
 ws.onmessage = function(payload) {
 	let data = JSON.parse(payload.data);
     console.log(data);
-    // console.log(pointsarray);
+    console.log(pointsarray);
 };
