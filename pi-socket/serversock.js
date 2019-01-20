@@ -67,7 +67,7 @@ class ServerSocket {
 				data.push(deviceLocation);
 				queued++;
 				if (queued > 100) {
-					mapsock.sendMessage(data.slice(0));
+					mapsock.sendMessage(JSON.stringify(data));
 					data = []
 					queued = 0;
 				}

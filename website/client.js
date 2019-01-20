@@ -7,6 +7,7 @@ ws.onclose = function(){
     alert("You have been disconnected from the websocket!");
 };
 ws.onmessage = function(payload) {
-    console.log(payload.data);
-    console.log(pointsarray);
+	let data = JSON.parse(payload.data);
+    console.log(data);
+    // console.log(pointsarray);
 };
