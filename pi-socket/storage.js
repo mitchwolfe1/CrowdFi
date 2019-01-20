@@ -24,6 +24,7 @@ class Storage {
 				}
 			});
 		});
+		return p;
 	}
 }
 module.exports = Storage;
