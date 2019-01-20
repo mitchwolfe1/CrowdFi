@@ -7,6 +7,7 @@ var storage = new Storage();
 
 let queued = 0;
 let data = [];
+let theshold = 3;
 
 class ServerSocket {
 
@@ -79,7 +80,7 @@ class ServerSocket {
     				let deviceLocation = ServerSocket.latLongAndDistanceToLatLong(rpiPos, json_obj["distance"]);
 					data.push(deviceLocation);
 					queued++;
-					if (queued > 10) {
+					if (queued > theshold) {
 						mapsock.sendMessage(JSON.stringify(data));
 						data = []
 						queued = 0;
