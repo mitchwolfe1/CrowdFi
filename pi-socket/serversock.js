@@ -2,6 +2,7 @@
 
 const WebSocketServer = require('ws').Server;
 const Storage = require('./storage.js');
+const MapsSocket = require('./mapssocket.js');
 var storage = new Storage();
 
 class ServerSocket {
@@ -28,6 +29,9 @@ class ServerSocket {
 	}
 
 	startWebSocket() {
+		var mapsock = new MapsSocket(1337);
+		mapssock.startWebSocket();
+
 		var cls = this;
 		var wss = new WebSocketServer({port: this.port});
 		console.log("Started websocket on port " + this.port)
@@ -47,7 +51,8 @@ class ServerSocket {
 				var json_obj = JSON.parse(message);
 				var distance = cls.distanceForSignalStrength(parseInt(json_obj['signal_strength']));
 				json_obj["distance"] = distance;
-				storage.storeDeviceData(json_obj["rpi"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
+				storage.storeDeviceData(json_obj["rpi_id"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
+				mapsocket.sendMessage(json_obj["rpi_id"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
 				console.log(json_obj);
 			});
 

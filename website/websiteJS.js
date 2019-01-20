@@ -1,70 +1,58 @@
 
-
-  // This example requires the Visualization library. Include the libraries=visualization
-  // parameter when you first load the API. For example:
-  // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization">
-  //nodejs
-  
-  function getPoints() {
-    return [
-        new google.maps.LatLng(37.785360, -122.439952),
-         new google.maps.LatLng(37.785715, -122.440030),
-         new google.maps.LatLng(37.786117, -122.440119),
-         new google.maps.LatLng(37.786564, -122.440209),
-         new google.maps.LatLng(37.786905, -122.440270),
-         new google.maps.LatLng(37.786956, -122.440279)
+var ws = new WebSocket("ws://35.233.148.65:1337");
+ws.onopen = function(){
+    console.log("Connected to websocket ");
+}
+ws.onclose = function(){
+    alert("You have been disconnected from the websocket!");
+};
+ws.onmessage = function(payload) {
+    console.log(payload.data);
+    updatemap(JSON.parse(payload.data))
+};
 
 
-    ];
+var map, pointarray, heatmap;
+ 
+ 
+function initMap() {
+  // the map's options
+  var mapOptions = {
+    zoom: 30,
+    center: new google.maps.LatLng(36.996852, -122.051734),
+    mapTypeId: google.maps.MapTypeId.SATELLITE,
+    tilt: 0
+  };
+ 
+  // the map and where to place it
+  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+ 
+  var pointArray = new google.maps.MVCArray(taxiData);
+ 
+  // what data for the heatmap and how to display it
+  heatmap = new google.maps.visualization.HeatmapLayer({
+    data: pointArray,
+    radius: 50
+  });
+ 
+  // placing the heatmap on the map
+  heatmap.setMap(map);
+}
+
+function updatemap(arr){ // [lat, lon, weight]
+  arr=[[36.996852, -122.051734, 10]]
+
+
+
+  var mapArr = [];
+  for(var i = 0; i < arr.length; i++){
+    mapArr.push({location: new google.maps.LatLng(arr[i][0], arr[i][1]), weight:arr[i][2]});
   }
-  function getPoints1() {
-    return [
-        new google.maps.LatLng(37.785360, -122.439952),
-         new google.maps.LatLng(37.785715, -122.440030),
-    ];
-  }
-
-  //regular js
-  var map, heatmap;
-  function updateMap(){
-    for(var i = 0; i < 1000; i++){
-      console.log(i);
-      heatmap.set('data', 
-        [
-          new google.maps.LatLng(37.785360, -122.439952+i),
-          new google.maps.LatLng(37.785715, -122.440030+i),
-          new google.maps.LatLng(37.786117, -122.440119+i),
-          new google.maps.LatLng(37.786564, -122.440209+i),
-          new google.maps.LatLng(37.786905, -122.440270+i),
-          new google.maps.LatLng(37.786956, -122.440279+i)
-      ]);
-    }
-  }
-
-  function updateMap2(){
-    heatmap.set('data', 
-      [
-         new google.maps.LatLng(37.786905, -122.440270),
-         new google.maps.LatLng(37.786956, -122.440279)
+  console.log(mapArr);
+  //var pointArray = new google.maps.MVCArray(mapArr);
+  heatmap.set('data', mapArr);
+}
 
 
-    ]);
-  }
-
-  function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 13,
-      center: {lat: 37.775, lng: -122.434},
-      mapTypeId: 'satellite'
-    });
-
-    heatmap = new google.maps.visualization.HeatmapLayer({
-      data: getPoints1(),
-      map: map
-    });
-
-  }
-  
-
-
-  // Heatmap data: 500 Points
+// as soon as the document is ready the map is initialized
+google.maps.event.addDomListener(window, 'load', initialize);

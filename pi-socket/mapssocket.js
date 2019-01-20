@@ -33,26 +33,12 @@ class MapsSocket {
 		});
 	}
 
-	static getMacData() {
-		let macPromise =  new Promise(function(resolve, reject) {
-			client.keys("*", function (err, res) {
-				resolve(res);
-			});
-		}).then(function(macs) {
-			let mac_data = {};
-			let mac_promises = [];
-			macs.forEach(function(mac) {
-				mac_promises.push(new Promise(function(resolve, reject) {
-					client.hgetall(mac, function(err, res) {
-						resolve(res);
-					});
-				}));
-			});
-			return Promise.all(mac_promises);
-		});
+
+	sendMessage(message) {
+		this.connections.forEach(function(ws){
+			ws.send(message);
+		})
 	}
-
-
 
 }
 module.exports = MapsSocket;
