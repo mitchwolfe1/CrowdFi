@@ -26,9 +26,10 @@ var taxiData = [
 function initialize() {
   // the map's options
   var mapOptions = {
-    zoom: 13,
-    center: new google.maps.LatLng(37.774546, -122.433523),
-    mapTypeId: google.maps.MapTypeId.SATELLITE
+    zoom: 30,
+    center: new google.maps.LatLng(36.996852, -122.051734),
+    mapTypeId: google.maps.MapTypeId.SATELLITE,
+    tilt: 0
   };
  
   // the map and where to place it
@@ -46,19 +47,7 @@ function initialize() {
   heatmap.setMap(map);
 }
 
-function updatemap(){
-
-  var arr = [
-    [37.782551, -122.445368],
-    [37.782745, -122.444586],
-    [37.782842, -122.443688],
-    [37.782919, -122.442815],
-    [37.782992, -122.442112],
-    [37.783100, -122.441461],
-    [37.783206, -122.440829],
-    [37.783273, -122.440324]
-      // ...
-  ];
+function updatemap(arr){
   var mapArr = [];
   for(var i = 0; i < arr.length; i++){
     mapArr.push(new google.maps.LatLng(arr[i][0], arr[i][1]));
