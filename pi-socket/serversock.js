@@ -52,6 +52,7 @@ class ServerSocket {
 
 			ws.on('message', function(message) {
 				var json_obj = JSON.parse(message);
+				console.log(json_obj);
 				var distance = cls.distanceForSignalStrength(parseInt(json_obj['signal_strength']));
 				json_obj["distance"] = distance;
 				storage.storeDeviceData(json_obj["rpi_id"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
@@ -70,7 +71,6 @@ class ServerSocket {
 					queued = 0;
 				}
 				// mapsocket.sendMessage(); //[lat, lon, weight]
-				console.log(json_obj);
 			});
 
 			console.log("New connection from " + ws._socket.remoteAddress);
