@@ -74,7 +74,7 @@ class ServerSocket {
 	static latLongAndDistanceToLatLong(ll, d) {
 		let rpiLat = ll.lat;
 		let rpiLong = ll.long;
-		console.log("RPI: " + ll.lat ", " + ll.long);
+		console.log("RPI: " + ll.lat + ", " + ll.long);
 		//new_latitude  = latitude  + (dy / r_earth) * (180 / pi);
 		//new_longitude = longitude + (dx / r_earth) * (180 / pi) / cos(latitude * pi/180);
 		let deviceAngle = Math.floor(Math.random() * 360);
