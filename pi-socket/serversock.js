@@ -53,6 +53,7 @@ class ServerSocket {
 			ws.on('message', function(message) {
 				var json_obj = JSON.parse(message);
 				console.log(json_obj);
+				console.log(queued);
 				var distance = cls.distanceForSignalStrength(parseInt(json_obj['signal_strength']));
 				json_obj["distance"] = distance;
 				storage.storeDeviceData(json_obj["rpi"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
@@ -66,7 +67,7 @@ class ServerSocket {
 				data.push(deviceLocation);
 				queued++;
 				if (queued > 100) {
-					mapsocket.sendMessage(data.slice(0));
+					mapsock.sendMessage(data.slice(0));
 					data = []
 					queued = 0;
 				}
