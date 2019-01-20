@@ -94,11 +94,12 @@ class ServerSocket {
 	}
 
 	static latLongAndDistanceToLatLong(ll, d) {
-		let rpiLat = ll.lat;
-		let rpiLong = ll.long;
+		let dist = parseFloat(d);
+		let rpiLat = parseFloat(ll.lat);
+		let rpiLong = parseFloat(ll.long);
 		let deviceAngle = Math.floor(Math.random() * 360);
-		let deltaLong = Math.cos(deviceAngle) * (d / 1000.0);
-		let deltaLat = Math.sin(deviceAngle) * (d / 1000.0);
+		let deltaLong = Math.cos(deviceAngle) * (dist / 1000.0);
+		let deltaLat = Math.sin(deviceAngle) * (dist / 1000.0);
 		let deviceLat = rpiLat + (deltaLat / 6378.0) * (180.0 / 3.1415);
 		let deviceLong = rpiLong + (deltaLong / 6378.0) * (180.0 / 3.1415) / Math.cos(rpiLat * (3.1415 / 180.0));
 		return {lat: deviceLat, long: deviceLong};
