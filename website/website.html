@@ -12,15 +12,14 @@
         padding: 0px
       }
     </style>
-    
+    <script src="websiteJS.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCc4plcHWQEBLLubjLRF7Fv8Kk04ZOeoJs&libraries=visualization&callback=initMap"></script>
   </head>
  
-  <body>
+  <body onload="initMap()">
     <!-- this is where the map finally is drawn onto -->
     <button onclick='updatemap()'>asdfasfd</button>
     <div id="map-canvas"></div>
-
-    <script src="websiteJS.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCc4plcHWQEBLLubjLRF7Fv8Kk04ZOeoJs&libraries=visualization&callback=initMap"></script>
+    
   </body>
 </html>

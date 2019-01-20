@@ -1,7 +1,4 @@
-
 var ws = new WebSocket("ws://35.233.148.65:1337");
-
-
 
 var map, pointarray, heatmap;
  
@@ -23,6 +20,7 @@ function initMap() {
   heatmap = new google.maps.visualization.HeatmapLayer({
     radius: 50
   });
+  console.log("HEATMAP: " + heatmap);
  
   // placing the heatmap on the map
   heatmap.setMap(map);
@@ -35,7 +33,7 @@ function updatemap(arr){ // [lat, lon, weight]
 
   var mapArr = [];
   for(var i = 0; i < arr.length; i++){
-    mapArr.push({location: new google.maps.LatLng(arr[i][0], arr[i][1]), weight:arr[i][2]});
+    mapArr.push({location: new google.maps.LatLng(arr[i].lat, arr[i].long), weight:1});
   }
   console.log(mapArr);
   //var pointArray = new google.maps.MVCArray(mapArr);
@@ -56,4 +54,4 @@ ws.onmessage = function(payload) {
 
 
 // as soon as the document is ready the map is initialized
-google.maps.event.addDomListener(window, 'load', initialize);
+// google.maps.event.addDomListener(window, 'load', initMap);
