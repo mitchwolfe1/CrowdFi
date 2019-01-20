@@ -13,7 +13,6 @@ class MapsSocket {
 		console.log("Started websocket on port " + this.port)
 		wss.on("connection", function(ws){
 			cls.connections.push(ws);
-			console.log(MapsSocket.getMacData());
 			ws.on('close', function(){
 
 				for(var i = 0; i < cls.connections.length; i++){
