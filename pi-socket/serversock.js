@@ -81,7 +81,7 @@ class ServerSocket {
 		console.log("Device angle: " + deviceAngle);
 		let deltaLong = Math.cos(deviceAngle) * (d / 100.0);
 		let deltaLat = Math.sin(deviceAngle) * (d / 100.0);
-		console.log("dLat: " + deltaLat ", dLong: " + deltaLong);
+		console.log("dLat: " + deltaLat + ", dLong: " + deltaLong);
 		let deviceLat = rpiLat + (deltaLat / 6378) * (180 / Math.pi);
 		let deviceLong = rpiLong + (deltaLong / 6378) * (180 / Math.pi) / Math.cos(rpiLat * (Math.pi / 180));
 
