@@ -9,7 +9,8 @@ function initMap() {
     zoom: 30,
     center: new google.maps.LatLng(36.996852, -122.051734),
     mapTypeId: google.maps.MapTypeId.SATELLITE,
-    tilt: 0
+    tilt: 0,
+    dissipating: true
   };
  
   // the map and where to place it
@@ -31,7 +32,7 @@ function updatemap(arr){ // [lat, lon, weight]
 
   var mapArr = [];
   for(var i = 0; i < arr.length; i++){
-    mapArr.push({location: new google.maps.LatLng(arr[i].lat, arr[i].long), weight:1});
+    mapArr.push({location: new google.maps.LatLng(arr[i].lat, arr[i].long)});
   }
   console.log(mapArr);
   //var pointArray = new google.maps.MVCArray(mapArr);
