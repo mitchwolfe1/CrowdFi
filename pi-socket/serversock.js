@@ -33,7 +33,7 @@ class ServerSocket {
 
 	startWebSocket() {
 		var mapsock = new MapsSocket(1337);
-		mapssock.startWebSocket();
+		mapsock.startWebSocket();
 
 		var cls = this;
 		var wss = new WebSocketServer({port: this.port});
@@ -74,6 +74,7 @@ class ServerSocket {
 	static latLongAndDistanceToLatLong(ll, d) {
 		let rpiLat = ll.lat;
 		let rpiLong = ll.long;
+		console.log("RPI: " + ll);
 		//new_latitude  = latitude  + (dy / r_earth) * (180 / pi);
 		//new_longitude = longitude + (dx / r_earth) * (180 / pi) / cos(latitude * pi/180);
 		let deviceAngle = Math.floor(Math.random() * 360);
