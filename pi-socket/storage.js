@@ -20,6 +20,7 @@ class Storage {
 				if (error != null) {
 					reject(error);
 				} else {
+					console.log(response);
 					resolve({lat: response[1], long: response[3]});
 				}
 			});
