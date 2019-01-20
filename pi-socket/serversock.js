@@ -58,21 +58,33 @@ class ServerSocket {
 				json_obj["distance"] = distance;
 				storage.storeDeviceData(json_obj["rpi"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
 				// var rpiPos = {lat: 0, long: 0};
-				(async () => {
-  					try {
-    					let rpiPos = await Storage.getRPiPosition(json_obj["rpi"]);
-    					console.log("RPIPOS: " + rpiPos.lat + "," + rpiPos.long);
-    					let deviceLocation = ServerSocket.latLongAndDistanceToLatLong(rpiPos, json_obj["distance"]);
-						data.push(deviceLocation);
-						queued++;
-						if (queued > 100) {
-							mapsock.sendMessage(JSON.stringify(data));
-							data = []
-							queued = 0;
-						}
-  					} catch(e) {}
-				})()
+				// (async () => {
+  		// 			try {
+    // 					let rpiPos = await Storage.getRPiPosition(json_obj["rpi"]);
+    // 					console.log("RPIPOS: " + rpiPos.lat + "," + rpiPos.long);
+    // 					let deviceLocation = ServerSocket.latLongAndDistanceToLatLong(rpiPos, json_obj["distance"]);
+				// 		data.push(deviceLocation);
+				// 		queued++;
+				// 		if (queued > 100) {
+				// 			mapsock.sendMessage(JSON.stringify(data));
+				// 			data = []
+				// 			queued = 0;
+				// 		}
+  		// 			} catch(e) {}
+				// })()
 				
+				Storage.getRPiPosition(json_obj["rpi"]).then((rpiPos) => {
+					console.log("RPIPOS: " + rpiPos.lat + "," + rpiPos.long);
+    				let deviceLocation = ServerSocket.latLongAndDistanceToLatLong(rpiPos, json_obj["distance"]);
+					data.push(deviceLocation);
+					queued++;
+					if (queued > 100) {
+						mapsock.sendMessage(JSON.stringify(data));
+						data = []
+						queued = 0;
+					}
+				});
+
 				// mapsocket.sendMessage(); //[lat, lon, weight]
 			});
 
