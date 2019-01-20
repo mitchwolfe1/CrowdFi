@@ -77,8 +77,8 @@ class ServerSocket {
 		//new_latitude  = latitude  + (dy / r_earth) * (180 / pi);
 		//new_longitude = longitude + (dx / r_earth) * (180 / pi) / cos(latitude * pi/180);
 		let deviceAngle = Math.floor(Math.random() * 360);
-		let deltaLong = Math.cos(deviceAngle) * d;
-		let deltaLat = Math.sin(deviceAngle) * d;
+		let deltaLong = Math.cos(deviceAngle) * (d / 100.0);
+		let deltaLat = Math.sin(deviceAngle) * (d / 100.0);
 
 		let deviceLat = rpiLat + (deltaLat / 6378) * (180 / Math.pi);
 		let deviceLong = rpiLong + (deltaLong / 6378) * (180 / Math.pi) / Math.cos(rpiLat * (Math.pi / 180));
