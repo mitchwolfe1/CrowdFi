@@ -47,7 +47,7 @@ class ServerSocket {
 				var json_obj = JSON.parse(message);
 				var distance = cls.distanceForSignalStrength(parseInt(json_obj['signal_strength']));
 				json_obj["distance"] = distance;
-				storage.storeDeviceData(json_obj["rpi_id"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
+				storage.storeDeviceData(json_obj["rpi"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
 				console.log(json_obj);
 			});
 

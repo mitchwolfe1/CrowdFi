@@ -1,5 +1,6 @@
 const WebSocketServer = require('ws').Server;
-
+const redis = require('redis'),
+	client = redis.createClient();
 class MapsSocket {
 	constructor(port){
 		this.port = port;
@@ -12,6 +13,7 @@ class MapsSocket {
 		console.log("Started websocket on port " + this.port)
 		wss.on("connection", function(ws){
 			cls.connections.push(ws);
+			console.log(MapsSocket.getMacData());
 			ws.on('close', function(){
 
 				for(var i = 0; i < cls.connections.length; i++){
@@ -30,5 +32,27 @@ class MapsSocket {
 
 		});
 	}
+
+	static getMacData() {
+		let macPromise =  new Promise(function(resolve, reject) {
+			client.keys("*", function (err, res) {
+				resolve(res);
+			});
+		}).then(function(macs) {
+			let mac_data = {};
+			let mac_promises = [];
+			macs.forEach(function(mac) {
+				mac_promises.push(new Promise(function(resolve, reject) {
+					client.hgetall(mac, function(err, res) {
+						resolve(res);
+					});
+				}));
+			});
+			return Promise.all(mac_promises);
+		});
+	}
+
+
+
 }
 module.exports = MapsSocket;

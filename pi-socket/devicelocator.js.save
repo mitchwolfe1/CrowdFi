@@ -1,0 +1,153 @@
+const redis = require('redis'),
+	client = redis.createClient();
+
+const trilaterate = require("./trilateration");
+
+
+class DeviceLocator {
+	constructor() {}
+
+	distanceForSignalStrength(signalLevel) {
+		let k = -27.55;
+		let Ptx = 19.5;
+		let CLtx = 0.0;
+		let CLrx = 0.0;
+		let AGtx = 2.0;
+		let AGrx = 0.0;
+		let Prx = signalLevel;
+		let FM = 14.0;
+		let f = 2412.0;
+		let fspl = Ptx - CLtx + AGtx + AGrx - CLrx - Prx - FM;
+		let distance = Math.pow(10, ((fspl - k - 20.0 * Math.log10(f)) / 20.0) );
+		return distance;
+	}
+
+	triangulateDevice(device) {
+		// Gather the necessary data from redis
+		var getDistancesPromise = new Promise(function(resolve, reject) {
+			client.hmget(device, "RPI1", "RPI2", "RPI3", "RPI4", "RPI5", function (err, res) {
+				if (err != null) {
+					reject(err);
+				} else {
+					resolve(res);
+				}
+			});
+		});
+		getDistancesPromise.then(function(result) {
+			let rpiPromises = [];
+			let rpiIds = ["RPI1", "RPI2", "RPI3", "RPI4", "RPI5"];
+			for (let i in rpiIds) {
+				let rpiId = rpiIds[i];
+				//console.log("ID: " + rpiId);
+				let rpiPromise = new Promise(function (resolve, reject) {
+					client.hmget(rpiId, "x", "y", function (err, res) {
+						if (err != null) {
+							reject(err);
+						} else {
+							resolve(res);
+						}
+					});
+
+				});
+				rpiPromises.push(rpiPromise);
+			}
+
+			Promise.all(rpiPromises).then(function(values) {
+				var point_dist = function(x1, y1, x2, y2) {
+					let x = x2-x1
+					let y = y2-y1
+					return Math.sqrt(x*x + y*y);
+				}
+				var circle_intersection = function(beacon1, beacon2) {
+					let r1 = beacon1.r
+					let r2 = beacon2.r
+					let dist = point_dist(beacon1.x, beacon1.y, beacon2.x, beacon2.y);
+					let heron_root = (dist + r1 + r2) * (-dist + r1 + r2) * (dist - r1 + r2) * (dist + r1 - r2);
+					if (heron_root > 0) {
+						let heron = 0.25 * Math.sqrt(heron_root);
+						let xbase = 0.5 * (beacon1.x + beacon2.x) + 0.5 * (beacon2.x - beacon1.x) * (r1 * r1 - r2 * r2) / (dist * dist);
+						let xdiff = 2*(beacon2.y - beacon1.y) * heron / (dist * dist);
+						let ybase = 0.5 * (beacon1.y + beacon2.y) + 0.5 * (beacon2.y - beacon1.y) * (r1 * r1 - r2 * r2) / (dist * dist);
+						let ydiff = 2 * (beacon2.x - beacon1.x) * heron / (dist * dist);
+						return [{x: xbase + xdiff, y: ybase - ydiff}, {x: xbase - xdiff, y: ybase + ydiff}];
+					} else {
+						return null;
+					}
+				}
+
+
+//				let piData = {"RPI1" : values[0], "RPI2" : values[1], "RPI3" : values[2], "RPI4" : values[3], "RPI5" :  values[4]};
+				let distances = result;
+//				console.log(piData);
+//				console.log(distances);
+				let p1 = {x: parseFloat(values[1][0]), y: parseFloat(values[1][1]), r: parseFloat(distances[1])};
+				let p2 = {x: parseFloat(values[2][0]), y: parseFloat(values[2][1]), r: parseFloat(distances[2])};
+				let p3 = {x: parseFloat(values[4][0]), y: parseFloat(values[4][1]), r: parseFloat(distances[4])};
+//				console.log(trilaterate);
+//				let p1 = {x: -2706.601, y: -4322.776, z: 3817.114, r: parseFloat(distances[1]) / 100.0};
+//				let p2 = {x: -2706.592, y: -4322.776, z: 3817.122, r: parseFloat(distances[2]) / 100.0};
+//				let p3 = {x: -2706.593, y: -4322.78, z: 3817.116, r: parseFloat(distances[4]) / 100.0};
+				console.log(p1);
+				console.log(p2);
+				console.log(p3);
+//				let loc = trilaterate(p1, p2, p3, true);
+//				console.log(loc);
+				let intersection;
+
+				let failing = true;
+				let power_increases = 0;
+				while (failing && power_increases < 10) {
+					let test_intersection = circle_intersection(p1, p2);
+					//console.log("TEST: " + test_intersection);
+					if (test_intersection != null) {
+						intersection = test_intersection;
+					} else {
+						p1.r *= 1.001;
+						p2.r *= 1.001;
+						power_increases++;
+						continue;
+					}
+				failing = false;
+				}
+				let THRESHOLD = 0.1;
+				if (failing) {
+					console.log("Unable to calculate position, exceeded power increases");
+				} else {
+					console.log(intersection);
+					let dist1 = point_dist(p3.x, p3.y, intersection[0].x, intersection[0].y);
+					let dist2 = point_dist(p3.x, p3.y, insersection[1].y, intersection[1].y);
+					let best_point;
+					let best_dist;
+					if (Math.abs(dist1 - p3.r) < Math.abs(dist2 - p3.r)) {
+						best_point = intersection[0];
+						best_dist = dist1;
+					} else {
+						best_point = insersection[1];
+						best_dist = dist2;
+					}
+					let best_dist_diff = Math.abs(best_dist - p3.r);
+					if (best_dist_diff < THRESHOLD * best_dist) {
+						console.log("FOUND: " + best_point);
+		getDistancesPromise.catch(function(error) {
+			console.log(error);
+		});
+	}
+}
+
+
+let d = new DeviceLocator();
+for (let i = -5; i > -90; i--){
+	console.log("power: " + i + " : " + d.distanceForSignalStrength(i));
+}
+
+
+
+//t.triangulateDevice("TE:ST:MA:C_");
+//console.log(t.distanceForSignalStrength(-17));
+
+
+const stdin = process.openStdin();
+stdin.addListener('data', text => {
+	const mac = text.toString().trim();
+	d.triangulateDevice(mac);
+});
