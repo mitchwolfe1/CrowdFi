@@ -14,7 +14,7 @@ class Storage {
 		client.hmset(rpiId, "lat", lat, "long", long);
 	}
 
-	async static getRPiPosition(rpiId) {
+	static async getRPiPosition(rpiId) {
 		let p = new Promise((resolve, reject) => {
 			client.hgetall(rpiId, (error, response) => {
 				if (error != null) {

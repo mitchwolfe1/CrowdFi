@@ -55,8 +55,11 @@ class ServerSocket {
 				var distance = cls.distanceForSignalStrength(parseInt(json_obj['signal_strength']));
 				json_obj["distance"] = distance;
 				storage.storeDeviceData(json_obj["rpi_id"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
-
-				let rpiPos = await Storage.getRPiPosition(json_obj["rpi_id"]);
+				(async () => {
+  					try {
+    				const rpiPos = await Storage.getRPiPosition(json_obj["rpi_id"]);
+  					} catch(e) {}
+				})()
 
 				// data[json_obj["mac_address"]] = [Storage.getRPiPositionjson_obj["rpi_id"]]
 				mapsocket.sendMessage(); //[lat, lon, weight]
@@ -68,7 +71,7 @@ class ServerSocket {
 		});
 	}
 
-	async static latLongAndDistanceToLatLong(ll, d) {
+	static latLongAndDistanceToLatLong(ll, d) {
 		let rpiLat = ll.lat;
 		let rpiLong = ll.long;
 		//new_latitude  = latitude  + (dy / r_earth) * (180 / pi);
