@@ -57,6 +57,7 @@ class ServerSocket {
 				var distance = cls.distanceForSignalStrength(parseInt(json_obj['signal_strength']));
 				json_obj["distance"] = distance;
 				storage.storeDeviceData(json_obj["rpi"], json_obj["mac_address"], json_obj["distance"], json_obj["ts"]);
+				if (distance > 30) return;
 				// var rpiPos = {lat: 0, long: 0};
 				// (async () => {
   		// 			try {

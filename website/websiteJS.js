@@ -27,9 +27,7 @@ function initMap() {
 }
 
 function updatemap(arr){ // [lat, lon, weight]
-  arr=[[36.996852, -122.051734, 10]]
-
-
+  // arr=[[36.996852, -122.051734, 10]]
 
   var mapArr = [];
   for(var i = 0; i < arr.length; i++){
@@ -38,6 +36,7 @@ function updatemap(arr){ // [lat, lon, weight]
   console.log(mapArr);
   //var pointArray = new google.maps.MVCArray(mapArr);
   heatmap.set('data', mapArr);
+  console.log("end of updatemap");
 }
 
 
