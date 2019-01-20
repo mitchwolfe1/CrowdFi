@@ -59,9 +59,18 @@ body, html, *:not(*) {
 }
 
 #landing {
-  height: calc(100% - 90px);
+  height:95%;
   width: 100%;
-  background-color:red;
+  background-color: #dddddd;
+}
+
+#landing h1 {
+  font-size: 40pt;
+}
+
+#landing p {
+  margin: 12pt 50pt;
+  font-size: 13pt;
 }
 
 #map-container {
