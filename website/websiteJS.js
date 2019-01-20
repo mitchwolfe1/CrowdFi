@@ -1,15 +1,6 @@
 
 var ws = new WebSocket("ws://35.233.148.65:1337");
-ws.onopen = function(){
-    console.log("Connected to websocket ");
-}
-ws.onclose = function(){
-    alert("You have been disconnected from the websocket!");
-};
-ws.onmessage = function(payload) {
-    console.log(payload.data);
-    updatemap(JSON.parse(payload.data))
-};
+
 
 
 var map, pointarray, heatmap;
@@ -27,11 +18,9 @@ function initMap() {
   // the map and where to place it
   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
  
-  var pointArray = new google.maps.MVCArray(taxiData);
  
   // what data for the heatmap and how to display it
   heatmap = new google.maps.visualization.HeatmapLayer({
-    data: pointArray,
     radius: 50
   });
  
@@ -52,6 +41,18 @@ function updatemap(arr){ // [lat, lon, weight]
   //var pointArray = new google.maps.MVCArray(mapArr);
   heatmap.set('data', mapArr);
 }
+
+
+ws.onopen = function(){
+    console.log("Connected to websocket ");
+}
+ws.onclose = function(){
+    alert("You have been disconnected from the websocket!");
+};
+ws.onmessage = function(payload) {
+    console.log(payload.data);
+    updatemap(JSON.parse(payload.data))
+};
 
 
 // as soon as the document is ready the map is initialized

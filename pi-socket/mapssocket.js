@@ -33,7 +33,6 @@ class MapsSocket {
 		});
 	}
 
-
 	sendMessage(message) {
 		this.connections.forEach(function(ws){
 			ws.send(message);

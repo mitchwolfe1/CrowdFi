@@ -13,20 +13,16 @@ class Storage {
 	storeRPiPosition(rpiId, lat, long) {
 		client.hmset(rpiId, "lat", lat, "long", long);
 	}
-	deviceIsTriangulatable(device) {
-		let promise = new Promise(function(resolve, reject) {
-			let sum = 0;
-			client.hmget(device, "1", "2", "3", "4", "5", function(err, res) {
-				for (let i = 0; i < res.length; i++) {
-					if (res[i] != '') sum++;
+
+	static getRPiPosition(rpiId) {
+		let p = new Promise((resolve, reject) => {
+			client.hgetall(rpiId, (error, response) => {
+				if (error != null) {
+					reject(error);
+				} else {
+					resolve({lat: response[1], long: response[3]});
 				}
 			});
-			resolve(sum > 2);
-		});
-
-		promise.then(function(value) {
-			console.log("Success: " + value);
-			return 1;
 		});
 	}
 }
