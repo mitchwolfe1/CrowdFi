@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Pulse</string>
+    <string name="title_activity_maps">Map</string>
+    <string-array name="RPI_Array">
+        <item>RPI 1</item>
+        <item>RPI 2</item>
+        <item>RPI 3</item>
+        <item>RPI 4</item>
+        <item>RPI 5</item>
+        <item>RPI 6</item>
+    </string-array>
+
+</resources>
